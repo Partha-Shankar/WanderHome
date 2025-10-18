@@ -1,3 +1,6 @@
+.container{
+    min-height: 100vh;
+}
 .navbar{
     background-color: azure;
     height:80px;
@@ -63,4 +66,21 @@
 .card-img-overlay:hover{
     opacity: 0.2;
     background-color: aliceblue;
+}
+
+/* show.ejs page */
+.card-button-group{
+    display: flex;
+    justify-content: space-between;
+}
+.card-button-group a{
+    background-color: #ff9900;
+    border: none;
+}
+/* .card-img-top{
+    width: 400px !important;
+    height: 400px !important;
+} */
+.title-description{
+    padding: 0px !important;
 }

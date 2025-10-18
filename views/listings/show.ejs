@@ -1,17 +1,25 @@
 <% layout("/layouts/boilerplate") %>
 <body>
-    <h1>Listing Details</h1>
-    <ul>
-        <li><%=listing.title%></li>
-        <li><%=listing.description%></li>
-        <li><a href = "<%=listing.image.url%>"><%=listing.image.url%></a></li>
-        <li>&#8377;<%=listing.price.toLocaleString("en-IN")%></li>
-        <li><%=listing.location%></li>
-        <li><%=listing.country%></li>
-    </ul>
-    <br><hr><br>
-    <a href = "/listings/<%=listing._id%>/edit">Edit this Listing</a><br><br>
-    <form method="post" action="/listings/<%=listing._id%>?_method=DELETE">
-        <button>Delete</button>
-    </form>
+    <div class="row">
+        <div class="col-9">
+            <div class="card offset-3">
+                <img class="card-img-top" src="<%=listing.image.url%>" alt="Image">
+                <div class="card-body title-description">
+                    <h5 class="card-title"><%=listing.title%></h5>
+                    <p class="card-text"><%=listing.description%><p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Price: </strong>&#8377;<%=listing.price.toLocaleString("en-IN")%></li>
+                    <li class="list-group-item"><strong>Location: </strong><%=listing.location%></li>
+                    <li class="list-group-item"><strong>Country: </strong><%=listing.country%></li>
+                </ul>
+                <div class="card-body card-button-group mt-3">
+                    <a href="/listings/<%=listing._id%>/edit" class="btn btn-dark">Edit</a>
+                    <form method="post" action="/listings/<%=listing._id%>?_method=DELETE">
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
