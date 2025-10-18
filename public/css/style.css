@@ -1,0 +1,39 @@
+.navbar{
+    background-color: azure;
+    height:80px;
+    margin-bottom: 25px !important;
+}
+/* Footer */
+.f-info{
+    background-color: azure;
+    height: 8rem;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.f-info-socials, .f-info-links, .f-info-brand{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;    
+}
+.f-info-links a{
+    text-decoration: none;
+    color: black;
+    margin-right: 10px;
+}
+.f-info-links a:hover{
+    text-decoration: underline;
+    font-size: 120%;
+    
+}
+.f-info-socials i{
+    margin-right: 10px;
+}
+.f-info-socials i:hover{
+    font-size: 120%;
+}

@@ -12,7 +12,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 app.engine('ejs',ejsMate);
-
+app.use(express.static(path.join(__dirname,"/public")));
 const methodOverride = require("method-override");
 app.use(methodOverride("_method"));
 
@@ -30,7 +30,7 @@ main().then(res => console.log("Server is connected to Mongodb Database"))
     .catch(err => console.log(err));
 
 app.get("/", async (req, res) => {
-    res.send("Hi this is Root");
+    res.render("listings/home.ejs");
 });
 
 app.get("/listings", async (req, res) => {
