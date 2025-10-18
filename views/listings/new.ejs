@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WanderLust</title>
+</head>
+<body>
+    <h1>New Listing</h1>
+    <form method = "POST" action = "/listings">
+        <input name = "listing[title]" placeholder = "Title" type = "text">
+        <br><hr><br>
+        <textarea name = "listing[description]" placeholder = "Description" rows = 10 cols = 10></textarea>
+        <br><hr><br>
+        <input name = "listing[image][url]" placeholder = "Enter the Image URL" type = "text">
+        <br><hr><br>
+        <input name = "listing[price]" placeholder = "Enter the Price" type = "Number">
+        <br><hr><br>
+        <input name = "listing[location]" placeholder = "Enter the Location" type = "text">
+        <br><hr><br>
+        <input name = "listing[country]" placeholder = "Enter the Country" type = "text">
+        <br><hr><br>
+        <button type = "submit">ADD</button>
+    </form>
+</body>
+</html>
