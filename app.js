@@ -20,7 +20,7 @@ app.use(methodOverride("_method"));
 
 const wrapAsync = require("./utils/wrapAsync.js");
 const expressError = require("./utils/expressError.js");
-const listingSchema = require("./schema.js");
+const { listingSchema, reviewSchema } = require("./schema.js");
 
 const Review = require("./models/review.js");
 
@@ -41,6 +41,15 @@ const validatelisting = (req,res,next) => {
     }
 }
 
+const validateReview = (req, res, next) => {
+    let {error} = reviewSchema.validate(req.body);
+    if(error){
+        let errMsg = error.details.map((el) => el.message).join(",");
+        throw new expressError(400,errMsg);
+    }else{
+        next();
+    }
+} 
 
 app.get("/", wrapAsync(async (req, res) => {
     res.render("listings/home.ejs");
@@ -84,7 +93,7 @@ app.delete("/listings/:id",wrapAsync(async(req,res) =>{
 }));
 
 //Reviews
-app.post("/listings/:id/reviews", async(req, res) => {
+app.post("/listings/:id/reviews", validateReview, wrapAsync(async(req, res) => {
     let { id } = req.params;
     let listing = await Listing.findById(id);
     let newReview = new Review(req.body.review);
@@ -92,7 +101,7 @@ app.post("/listings/:id/reviews", async(req, res) => {
     await newReview.save();
     await listing.save();
     res.redirect(`/listings/${listing._id}`);
-})
+}));
 
 app.use((req,res,next) => {
     next(new expressError(404,"This Page is Not found in Server"));
