@@ -21,5 +21,21 @@
                 </div>
             </div>
         </div>
+        <hr>
+        <!-- reviews -->
+        <div class="col-8 offset-3 mt-3 mb-3">
+            <h4>Leave a Review</h4>
+            <form action="/listings/<%=listing.id%>/reviews" method="post">
+                <div class="mb-3 mt-3">
+                    <label for="rating" class="form-label">Rating: </label>
+                    <input type="range" min="1" max="5" class="form-range" name="review[rating]" id="rating">
+                </div>
+                <div class="mb-3">
+                    <label for="reviewDescripton" class="form-label">Descripton: </label>
+                    <textarea class="form-control" id="reviewDescripton" rows="5" cols="5" name="review[comment]" ></textarea>
+                </div>
+                <button class="btn btn-outline-dark">Submit</button>
+            </form>
+        </div>
     </div>
 </body>

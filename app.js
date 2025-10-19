@@ -22,6 +22,7 @@ const wrapAsync = require("./utils/wrapAsync.js");
 const expressError = require("./utils/expressError.js");
 const listingSchema = require("./schema.js");
 
+const Review = require("./models/review.js");
 
 //setup the connection between MongoDb and javascript
 async function main(){
@@ -81,6 +82,18 @@ app.delete("/listings/:id",wrapAsync(async(req,res) =>{
     await Listing.findByIdAndDelete(id);
     res.redirect("/listings");
 }));
+
+//Reviews
+app.post("/listings/:id/reviews", async(req, res) => {
+    let { id } = req.params;
+    let listing = await Listing.findById(id);
+    let newReview = new Review(req.body.review);
+    listing.reviews.push(newReview);
+    await newReview.save();
+    await listing.save();
+    res.redirect(`/listings/${listing._id}`);
+})
+
 app.use((req,res,next) => {
     next(new expressError(404,"This Page is Not found in Server"));
 });
