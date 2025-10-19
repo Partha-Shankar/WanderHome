@@ -5,6 +5,8 @@ const mongoose = require("mongoose"); //require Mongoose
 const Listing = require("./models/listing.js");//require listing Schema Model
 
 app.use(express.urlencoded({extended:true}));
+app.use(express.json());
+
 const port = 8080;//define port Number
 const Mongo_URL = 'mongodb://127.0.0.1:27017/wanderLust';//define the URL of MongoDB
 const path = require("path") //require path
@@ -16,11 +18,10 @@ app.use(express.static(path.join(__dirname,"/public")));
 const methodOverride = require("method-override");
 app.use(methodOverride("_method"));
 
+const wrapAsync = require("./utils/wrapAsync.js");
+const expressError = require("./utils/expressError.js");
+const listingSchema = require("./schema.js");
 
-//setup the server 
-app.listen(port, () => {
-    console.log(`Server is listening to port: ${8080}`);
-});
 
 //setup the connection between MongoDb and javascript
 async function main(){
@@ -29,46 +30,73 @@ async function main(){
 main().then(res => console.log("Server is connected to Mongodb Database"))
     .catch(err => console.log(err));
 
-app.get("/", async (req, res) => {
-    res.render("listings/home.ejs");
-});
+const validatelisting = (req,res,next) => {
+    let {error} = listingSchema.validate(req.body);
+    if(error){
+        let errMsg = error.details.map((el) => el.message).join(",");
+        throw new expressError(400,errMsg);
+    }else{
+        next();
+    }
+}
 
-app.get("/listings", async (req, res) => {
+
+app.get("/", wrapAsync(async (req, res) => {
+    res.render("listings/home.ejs");
+}));
+
+app.get("/listings", wrapAsync(async (req, res) => {
     const allListings = await Listing.find({});
     res.render("listings/index.ejs", { allListings});
-});
+}));
 //new Route
 app.get("/listings/new", (req, res) => {
     res.render("listings/new.ejs");
 });
 //Read or Show Route
-app.get("/listings/:id", async (req, res) => {
+app.get("/listings/:id", wrapAsync(async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
     res.render("listings/show.ejs", { listing });
-});
-app.post("/listings", async (req, res) => {
+}));
+app.post("/listings",validatelisting, wrapAsync(async (req, res) => {
     const newListing = new Listing(req.body.listing);
     await newListing.save();
     res.redirect("/listings");
-});
+}));
 //EditRoute
-app.get("/listings/:id/edit", async (req, res) => {
+app.get("/listings/:id/edit", wrapAsync(async (req, res) => {
     let {id} = req.params;
     const listing = await Listing.findById(id);
     res.render("listings/edit.ejs", {listing});
-});
+}));
 //update Route
-app.put("/listings/:id", async(req, res) => {
+app.put("/listings/:id", validatelisting, wrapAsync(async(req, res) => {
     let { id } = req.params;
     await Listing.findByIdAndUpdate(id, {...req.body.listing});
     res.redirect(`/listings/${id}`);
-});
-app.delete("/listings/:id",async(req,res) =>{
+}));
+app.delete("/listings/:id",wrapAsync(async(req,res) =>{
     let { id } = req.params;
     await Listing.findByIdAndDelete(id);
     res.redirect("/listings");
-})
+}));
+app.use((req,res,next) => {
+    next(new expressError(404,"This Page is Not found in Server"));
+});
+app.use((err,req,res,next) => {
+    let {statusCode = 500, message = "Something Went Wrong,We are Checking Constantly to remove this error"} = err;
+    res.status(statusCode).render("listings/error.ejs" ,{ message , statusCode });
+});
+
+//setup the server 
+app.listen(port, () => {
+    console.log(`Server is listening to port: ${8080}`);
+});
+
+
+
+
 
 
 // //testing Route
