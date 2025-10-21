@@ -66,7 +66,7 @@ app.get("/listings/new", (req, res) => {
 //Read or Show Route
 app.get("/listings/:id", wrapAsync(async (req, res) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id);
+    const listing = await Listing.findById(id).populate("reviews");
     res.render("listings/show.ejs", { listing });
 }));
 app.post("/listings",validatelisting, wrapAsync(async (req, res) => {
@@ -103,6 +103,12 @@ app.post("/listings/:id/reviews", validateReview, wrapAsync(async(req, res) => {
     res.redirect(`/listings/${listing._id}`);
 }));
 
+app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async(req,res) => {
+    let {id, reviewId } = req.params;
+    await Listing.findByIdAndUpdate(id, {$pull:{reviews:reviewId}});
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/listings/${id}`);
+}))
 app.use((req,res,next) => {
     next(new expressError(404,"This Page is Not found in Server"));
 });

@@ -42,7 +42,7 @@
 }
 
 /* card styling */
-.card{
+.listing-card{
     border: none !important;
     margin-bottom: 2rem !important;
 }
@@ -52,10 +52,11 @@
     object-fit: cover !important;
     height: 350px !important;
 }
-.card-body{
+.listing-card-body{
     padding: 0 !important;
     padding-left: 1rem !important;
 }
+
 .listing-link{
     text-decoration: none;
 }
@@ -83,4 +84,10 @@
 } */
 .title-description{
     padding: 0px !important;
+}
+
+/* review design */
+.review-star-filled{
+    color:#ff9900;
+    font-size: 25px;
 }
