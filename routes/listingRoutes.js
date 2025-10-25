@@ -4,6 +4,7 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const expressError = require("../utils/expressError.js");
 const { listingSchema} = require("../schema.js");
 const router = express.Router({mergeParams:true});
+const { isLoggedIn } = require("../middleware.js");
 
 const validatelisting = (req,res,next) => {
     let {error} = listingSchema.validate(req.body);
@@ -20,11 +21,11 @@ router.get("/", wrapAsync(async (req, res) => {
     res.render("listings/index.ejs", { allListings});
 }));
 //new Route
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
     res.render("listings/new.ejs");
 });
 //Read or Show Route
-router.get("/:id", wrapAsync(async (req, res) => {
+router.get("/:id", isLoggedIn, wrapAsync(async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id).populate("reviews");
     res.render("listings/show.ejs", { listing });
@@ -36,7 +37,7 @@ router.post("/",validatelisting, wrapAsync(async (req, res) => {
     res.redirect("/listings");
 }));
 //EditRoute
-router.get("/:id/edit", wrapAsync(async (req, res) => {
+router.get("/:id/edit",isLoggedIn, wrapAsync(async (req, res) => {
     let {id} = req.params;
     const listing = await Listing.findById(id);
     res.render("listings/edit.ejs", {listing});
