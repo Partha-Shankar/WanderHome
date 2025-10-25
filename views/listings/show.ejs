@@ -5,6 +5,7 @@
             <div class="card offset-3 listing-card">
                 <img class="card-img-top" src="<%=listing.image.url%>" alt="Image">
                 <div class="card-body listing-card-body title-description">
+                    <p class="card-text">Owned By <%= listing.owner.username %></p>
                     <h5 class="card-title"><%=listing.title%></h5>
                     <p class="card-text"><%=listing.description%><p>
                 </div>

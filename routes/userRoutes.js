@@ -4,8 +4,8 @@ const expressError = require("../utils/expressError.js");
 const router = express.Router({mergeParams:true});
 const User = require("../models/user.js");
 const passport = require("passport");
-
-
+const { saveRedirectUrl } = require("../middleware.js");
+ 
 router.get("/signup", (req,res) => {
     res.render("users/signUp.ejs");
 });
@@ -32,14 +32,14 @@ router.get("/login",(req,res) => {
     res.render("users/login.ejs");
 });
 
-router.post("/login",
+router.post("/login",saveRedirectUrl,
     passport.authenticate("local",{
         failureRedirect:"/login",
         failureFlash:true,
     }),
     wrapAsync(async(req,res) => {
         req.flash("success","Welcome to wanderHome");
-        res.redirect("/listings");
+        res.redirect(res.locals.redirectUrl);
     })
 );
 
