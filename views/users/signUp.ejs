@@ -1,0 +1,37 @@
+<% layout("/layouts/boilerplate") %>
+
+<body>
+    <div class="row">
+        <div class="col-8 offset-2">
+            <h1>Signup For the WanderHome</h1>
+            <br>
+            <form method = "POST" action = "/signup" novalidate class="needs-validation">
+                <div>
+                    <label for="userName">User-Name:   </label>
+                    <input name = "userName" id="userName" placeholder = "Enter your UserName" type = "text" class="form-control" required>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Please provide a valid UserName</div>
+                </div>
+                <br>
+
+                <div>
+                    <label for="email" class="form-label">Email: </label>
+                    <input name = "email" id="email" placeholder = "Enter Your Email" type = "email" class="form-control" required>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Enter a Valid email</div>
+                </div>
+                <br>
+
+                <div>
+                    <label for="password" class="form-label">Password: </label>
+                    <input name = "password" id="password" placeholder = "Enter Your Password" type = "password" class="form-control" required>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Enter a Valid Password</div>
+                </div>
+                <br>
+
+                <button type = "submit" class="btn btn-dark">Signup</button><br><br>
+            </form>
+        </div>
+    </div>
+</body>

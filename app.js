@@ -3,13 +3,20 @@ const app  = express();
 const ejsMate = require("ejs-mate");
 const mongoose = require("mongoose"); //require Mongoose
 const path = require("path"); //require path
+const session = require("express-session");
+const flash = require("connect-flash");
+const passport = require("passport");
+const Localstratergy = require("passport-local");
+const User = require("./models/user.js");
 
 const methodOverride = require("method-override");
 const wrapAsync = require("./utils/wrapAsync.js");
 const expressError = require("./utils/expressError.js");
 
-const listings = require("./routes/listing.js");
-const review = require("./routes/review.js");
+const listingsRoutes = require("./routes/listingRoutes.js");
+const reviewRoutes = require("./routes/reviewRoutes.js");
+const userRoutes = require("./routes/userRoutes.js");
+// const { deserialize } = require("v8");
 
 const port = 8080;//define port Number
 const Mongo_URL = 'mongodb://127.0.0.1:27017/wanderLust';//define the URL of MongoDB
@@ -24,15 +31,37 @@ app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname,"/public")));
 
-app.use("/listings",listings);
-app.use("/listings/:id/reviews",review);
-
 //setup the connection between MongoDb and javascript
 async function main(){
     await mongoose.connect(Mongo_URL);
 };
 main().then(res => console.log("Server is connected to Mongodb Database"))
     .catch(err => console.log(err));
+
+
+const sessionOptions = {
+    secret:"mysecret",
+    resave:false,
+    saveUninitialized:true,
+}
+app.use(session(sessionOptions));
+app.use(flash());
+
+app.use((req,res,next) => {
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
+})
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new Localstratergy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use("/listings",listingsRoutes);
+app.use("/listings/:id/reviews",reviewRoutes);
+app.use("/",userRoutes);
 
 app.get("/", wrapAsync(async (req, res) => {
     res.render("listings/home.ejs");
