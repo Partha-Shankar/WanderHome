@@ -14,40 +14,45 @@
                     <li class="list-group-item"><strong>Location: </strong><%=listing.location%></li>
                     <li class="list-group-item"><strong>Country: </strong><%=listing.country%></li>
                 </ul>
-                <div class="card-body card-button-group mt-3">
-                    <a href="/listings/<%=listing._id%>/edit" class="btn btn-dark">Edit</a>
-                    <form method="post" action="/listings/<%=listing._id%>?_method=DELETE">
-                        <button class="btn btn-danger">Delete</button>
-                    </form>
-                </div>
+
+                <% if(currentUser) {%>
+                    <div class="card-body card-button-group mt-3">
+                        <a href="/listings/<%=listing._id%>/edit" class="btn btn-dark">Edit</a>
+                        <form method="post" action="/listings/<%=listing._id%>?_method=DELETE">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                <% } %>    
             </div>
         </div>
     </div>    
         <!-- reviews -->
-    <div class="row offset-2">
-        <hr>
-        <div class="col-5 mt-3 mb-3">
-            <h4>Leave a Review</h4>
-            <form action="/listings/<%=listing.id%>/reviews" method="post">
-                <div class="mb-3 mt-3">
-                    <label for="rating" class="form-label">Rating: </label>
-                    <input type="range" min="1" max="5" class="form-range" name="review[rating]" id="rating">
-                </div>
-                <div class="mb-3">
-                    <label for="reviewDescripton" class="form-label">Descripton: </label>
-                    <textarea class="form-control" id="reviewDescripton" rows="5" cols="5" placeholder="Add a description" name="review[comment]" ></textarea>
-                </div>
-                <button class="btn btn-outline-dark">Submit</button>
-            </form>
+    <% if(currentUser) {%>
+        <div class="row offset-2">
+            <hr>
+            <div class="col-5 mt-3 mb-3">
+                <h4>Leave a Review</h4>
+                <form action="/listings/<%=listing.id%>/reviews" method="post">
+                    <div class="mb-3 mt-3">
+                        <label for="rating" class="form-label">Rating: </label>
+                        <input type="range" min="1" max="5" class="form-range" name="review[rating]" id="rating">
+                    </div>
+                    <div class="mb-3">
+                        <label for="reviewDescripton" class="form-label">Descripton: </label>
+                        <textarea class="form-control" id="reviewDescripton" rows="5" cols="5" placeholder="Add a description" name="review[comment]" ></textarea>
+                    </div>
+                    <button class="btn btn-outline-dark">Submit</button>
+                </form>
+            </div>
         </div>
-    </div>
+    <% } %>
         <!-- Show Reviews -->
     <div class="row justify-content-center text-center">
         <hr>
         <!-- <h3 class="text-muted">Take a Look at Reviews</h3> -->
         <% for(review of listing.reviews) {%>
        <div class="card col-12 col-lg-4 col-xl-5 m-2 px-0 rounded">
-            <div class="card-header">John Doe</div>
+            <div class="card-header"><%= review.author.username %></div>
             <div class="card-body">
                 <h5 class="card-title"> 
                     <% for(let i = 0;i < review.rating;i++){ %>
@@ -58,9 +63,11 @@
                     <% } %>
                 </h5>
                 <p class = "card-text"><%=review.comment %></p>
-                <form method="post" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
-                    <button class="btn btn-danger mb-3" type="submit">DELETE</button>
-                </form>
+                <% if(currentUser) {%>
+                    <form method="post" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                        <button class="btn btn-danger mb-3" type="submit">DELETE</button>
+                    </form>
+                <% } %>
             </div>
             <div class="card-footer text-muted"><%= review.createdAt %></div>
         </div>

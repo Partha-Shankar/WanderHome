@@ -38,6 +38,7 @@ router.post("/login",saveRedirectUrl,
         failureFlash:true,
     }),
     wrapAsync(async(req,res) => {
+        res.locals.redirectUrl = req.session.redirectUrl || "/listings";
         req.flash("success","Welcome to wanderHome");
         res.redirect(res.locals.redirectUrl);
     })
