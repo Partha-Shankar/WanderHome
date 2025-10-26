@@ -15,7 +15,7 @@
                     <li class="list-group-item"><strong>Country: </strong><%=listing.country%></li>
                 </ul>
 
-                <% if(currentUser) {%>
+                <% if(currentUser && currentUser._id.equals(listing.owner._id)) {%>
                     <div class="card-body card-button-group mt-3">
                         <a href="/listings/<%=listing._id%>/edit" class="btn btn-dark">Edit</a>
                         <form method="post" action="/listings/<%=listing._id%>?_method=DELETE">
@@ -63,7 +63,7 @@
                     <% } %>
                 </h5>
                 <p class = "card-text"><%=review.comment %></p>
-                <% if(currentUser) {%>
+                <% if(currentUser && currentUser._id.equals(review.author._id)) {%>
                     <form method="post" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
                         <button class="btn btn-danger mb-3" type="submit">DELETE</button>
                     </form>
