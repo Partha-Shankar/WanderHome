@@ -2,7 +2,7 @@
 <body> 
     <div class="row">
         <div class="col-8">
-        <form method = "POST" action = "/listings/<%=listing._id%>?_method=PUT" novalidate class="needs-validation">
+        <form method = "POST" action = "/listings/<%=listing._id%>?_method=PUT" enctype="multipart/form-data" novalidate class="needs-validation">
         <div>
             <label for="title" class="form-label">Title:</label>
             <input name = "listing[title]" value = "<%=listing.title%>" type = "text" class="form-control" required>
@@ -18,10 +18,10 @@
         </div><br>
 
         <div>
-            <label for="imageURL" class="form-label">Image URL:</label>
-            <input name = "listing[image][url]" class="form-control" value = "<%=listing.image.url%>" type = "text" required>
-            <div class="valid-feedback">Looks good!</div>
-            <div class="invalid-feedback">Enter a Valid URL</div>
+            <label for="imageURL" class="form-label">Image:</label>
+            <input name = "listing[image]" class="form-control" value = "<%=listing.image.url%>" type = "file">
+            <!-- <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Enter a Valid URL</div> -->
         </div><br>
 
         <div>

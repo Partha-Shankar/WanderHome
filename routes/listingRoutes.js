@@ -23,9 +23,7 @@ router
 router
   .route("/:id")
   .get(wrapAsync(listingController.getIndividualListing))
-  .put(isLoggedIn, isOwner, validatelisting, wrapAsync(listingController.putEditListing))
+  .put(isLoggedIn, isOwner, validatelisting, parser.single('listing[image]'), wrapAsync(listingController.putEditListing))
   .delete(isLoggedIn, isOwner, wrapAsync(listingController.deleteListing));
 
-
-``
 module.exports = router;
