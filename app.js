@@ -2,11 +2,11 @@ if(process.env.NODE_ENV != "production"){
     require("dotenv").config();
 } 
 
-const express = require("express"); //require express
+const express = require("express"); 
 const app  = express();
 const ejsMate = require("ejs-mate");
-const mongoose = require("mongoose"); //require Mongoose
-const path = require("path"); //require path
+const mongoose = require("mongoose"); 
+const path = require("path"); 
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
@@ -22,8 +22,8 @@ const reviewRoutes = require("./routes/reviewRoutes.js");
 const userRoutes = require("./routes/userRoutes.js");
 // const { deserialize } = require("v8");
 
-const port = 8080;//define port Number
-const Mongo_URL = 'mongodb://127.0.0.1:27017/wanderLust';//define the URL of MongoDB
+const port = 8080;// port Number
+const Mongo_URL = 'mongodb://127.0.0.1:27017/wanderLust';//URL of MongoDB
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -79,7 +79,7 @@ app.use((err,req,res,next) => {
     let {statusCode = 500, message = "Something Went Wrong,We are Checking Constantly to remove this error"} = err;
     res.status(statusCode).render("listings/error.ejs" ,{ message , statusCode });
 });
-//setup the server 
+
 app.listen(port, () => {
     console.log(`Server is listening to port: ${8080}`);
 });

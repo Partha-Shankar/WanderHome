@@ -4,13 +4,21 @@ const router = express.Router({mergeParams:true});
 const { isLoggedIn, validatelisting, isOwner } = require("../middleware.js");
 const listingController = require("../controllers/listingController.js");
 
+//cloud setup
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const multer = require('multer');
+const { storage } = require("../cloudConfig.js");
+const parser = multer({ storage: storage });
+
+router.get("/new", isLoggedIn, wrapAsync(listingController.getNewListing));
+router.get("/:id/edit",isLoggedIn, isOwner, wrapAsync(listingController.getEditListing));
+
 router
   .route("/")
   .get(wrapAsync(listingController.getAllListings))
-  .post(isLoggedIn, validatelisting, wrapAsync(listingController.postNewListing));
+  .post(isLoggedIn, validatelisting, parser.single('listing[image]'), wrapAsync(listingController.postNewListing));
 
-
-router.get("/new", isLoggedIn, wrapAsync(listingController.getNewListing));
 
 router
   .route("/:id")
@@ -18,6 +26,6 @@ router
   .put(isLoggedIn, isOwner, validatelisting, wrapAsync(listingController.putEditListing))
   .delete(isLoggedIn, isOwner, wrapAsync(listingController.deleteListing));
 
-router.get("/:id/edit",isLoggedIn, isOwner, wrapAsync(listingController.getEditListing));
 
+``
 module.exports = router;

@@ -5,7 +5,7 @@ module.exports.getAllListings = async (req, res) => {
     res.render("listings/index.ejs", { allListings});
 };
 
-module.exports.getNewListing = (req, res) => {
+module.exports.getNewListing = async (req, res) => {
     res.render("listings/new.ejs");
 };
 
@@ -22,8 +22,11 @@ module.exports.getIndividualListing = async (req, res) => {
 };
 
 module.exports.postNewListing = async (req, res) => {
+    let url = req.file.path;
+    let filename = req.file.filename;
     const newListing = new Listing(req.body.listing);
     newListing.owner = req.user._id;
+    newListing.image = {filename,url};
     await newListing.save();
     req.flash("success","New Listing Created Sucessfully!");
     res.redirect("/listings");

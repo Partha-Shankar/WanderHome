@@ -2,7 +2,7 @@
 <body>
     <div class="row">
         <div class="col-8 offset-2">
-    <form method = "POST" action = "/listings" novalidate class="needs-validation">
+    <form method = "POST" action = "/listings" enctype="multipart/form-data" novalidate class="needs-validation">
         <div>
             <label for="title">Title:   </label>
             <input name = "listing[title]" placeholder = "Title" type = "text" class="form-control" required>
@@ -21,7 +21,7 @@
 
         <div>
             <label for="url" class="form-label">Image URL: </label>
-            <input name = "listing[image][url]" placeholder = "Enter the Image URL" type = "text" class="form-control">
+            <input name = "listing[image]" placeholder = "Enter the Image URL" type = "file" class="form-control">
             <div class="valid-feedback">Looks good!</div>
         </div>
         <br>
