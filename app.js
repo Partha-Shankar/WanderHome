@@ -8,6 +8,7 @@ const ejsMate = require("ejs-mate");
 const mongoose = require("mongoose"); 
 const path = require("path"); 
 const session = require("express-session");
+const MongoStore = require('connect-mongo');
 const flash = require("connect-flash");
 const passport = require("passport");
 const Localstratergy = require("passport-local");
@@ -22,8 +23,8 @@ const reviewRoutes = require("./routes/reviewRoutes.js");
 const userRoutes = require("./routes/userRoutes.js");
 // const { deserialize } = require("v8");
 
-const port = 8080;// port Number
-const Mongo_URL = 'mongodb://127.0.0.1:27017/wanderLust';//URL of MongoDB
+const port = 8080;
+// const Mongo_URL = 'mongodb://127.0.0.1:27017/wanderLust';
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -35,21 +36,40 @@ app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname,"/public")));
 
-//setup the connection between MongoDb and javascript
+
 async function main(){
-    await mongoose.connect(Mongo_URL);
+    await mongoose.connect(process.env.ATLAS_URL, {
+    serverSelectionTimeoutMS: 5000,
+});
 };
 main().then(res => console.log("Server is connected to Mongodb Database"))
     .catch(err => console.log(err));
 
+const store = MongoStore.create({
+  mongoUrl: process.env.ATLAS_URL,
+  crypto: {
+    secret: process.env.MONGO_SECRET_KEY,
+  },
+  touchAfter: 24 * 3600 // 24 hours
+});
+store.on("error", (e) => {
+    console.log("Error in Mongo sessin store",e);
+});
 
 const sessionOptions = {
-    secret:"mysecret",
-    resave:false,
-    saveUninitialized:true,
-}
+  store,
+  secret: process.env.SESSION_SECRET, 
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24 
+  }
+};
+
 app.use(session(sessionOptions));
 app.use(flash());
+
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -68,9 +88,9 @@ app.use("/listings",listingsRoutes);
 app.use("/listings/:id/reviews",reviewRoutes);
 app.use("/",userRoutes);
 
-app.get("/", wrapAsync(async (req, res) => {
-    res.render("listings/home.ejs");
-}));
+// app.get("/", wrapAsync(async (req, res) => {
+//     res.render("listings/home.ejs");
+// }));
 
 app.use((req,res,next) => {
     next(new expressError(404,"This Page is Not found in Server"));

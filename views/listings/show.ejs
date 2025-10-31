@@ -9,6 +9,7 @@
                     <h5 class="card-title"><%=listing.title%></h5>
                     <p class="card-text"><%=listing.description%><p>
                 </div>
+                
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item"><strong>Price: </strong>&#8377;<%=listing.price.toLocaleString("en-IN")%></li>
                     <li class="list-group-item"><strong>Location: </strong><%=listing.location%></li>
@@ -26,42 +27,54 @@
             </div>
         </div>
     </div>    
-        <!-- reviews -->
+
+    <!-- reviews -->
+
     <% if(currentUser) {%>
         <div class="row offset-2">
             <hr>
             <div class="col-5 mt-3 mb-3">
                 <h4>Leave a Review</h4>
+
                 <form action="/listings/<%=listing.id%>/reviews" method="post">
+
                     <div class="mb-3 mt-3">
                         <label for="rating" class="form-label">Rating: </label>
                         <fieldset class="starability-basic">
-                            <legend>First rating:</legend>
-                            <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-                            <label for="first-rate1" title="Terrible">1 star</label>
-                            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-                            <label for="first-rate2" title="Not good">2 stars</label>
-                            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-                            <label for="first-rate3" title="Average">3 stars</label>
-                            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-                            <label for="first-rate4" title="Very good">4 stars</label>
-                            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-                            <label for="first-rate5" title="Amazing">5 stars</label>
+                            <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="" checked disabled aria-label="No rating." />
+                            <input type="radio" id="rate1" name="review[rating]" value="1" />
+                            <label for="rate1" title="Terrible">1 star</label>
+                            <input type="radio" id="rate2" name="review[rating]" value="2" />
+                            <label for="rate2" title="Not good">2 stars</label>
+                            <input type="radio" id="rate3" name="review[rating]" value="3" />
+                            <label for="rate3" title="Average">3 stars</label>
+                            <input type="radio" id="rate4" name="review[rating]" value="4" />
+                            <label for="rate4" title="Very good">4 stars</label>
+                            <input type="radio" id="rate5" name="review[rating]" value="5" />
+                            <label for="rate5" title="Amazing">5 stars</label>
                         </fieldset>
                     </div>
+
                     <div class="mb-3">
                         <label for="reviewDescripton" class="form-label">Descripton: </label>
                         <textarea class="form-control" id="reviewDescripton" rows="5" cols="5" placeholder="Add a description" name="review[comment]" ></textarea>
                     </div>
+
                     <button class="btn btn-outline-dark">Submit</button>
+
                 </form>
             </div>
         </div>
     <% } %>
-        <!-- Show Reviews -->
+
+    <!-- Show Reviews -->
+
     <div class="row justify-content-center text-center">
         <hr>
-        <!-- <h3 class="text-muted">Take a Look at Reviews</h3> -->
+        <% if(listing.reviews.length > 1) {%>
+            <h3 class="text-muted">Take a Look at Reviews</h3>
+        <% } %>
+
         <% for(review of listing.reviews) {%>
        <div class="card col-12 col-lg-4 col-xl-5 m-2 px-0 rounded">
             <div class="card-header"><%= review.author.username %></div>
@@ -74,6 +87,7 @@
                         <span class="star">&#9734;</span>
                     <% } %>
                 </h5>
+
                 <p class = "card-text"><%=review.comment %></p>
                 <% if(currentUser && currentUser._id.equals(review.author._id)) {%>
                     <form method="post" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
@@ -81,6 +95,7 @@
                     </form>
                 <% } %>
             </div>
+
             <div class="card-footer text-muted"><%= review.createdAt %></div>
         </div>
         <% } %>

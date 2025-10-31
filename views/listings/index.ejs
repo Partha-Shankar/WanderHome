@@ -1,11 +1,7 @@
 <% layout("/layouts/boilerplate") %>
 <body>
-    <h1>All Listings</h1>
+    <h1>All Houses</h1>
     <hr><br>
-    <!-- <form method = "GET" action = "/listings/new">
-        <button type = "submit">Create New Listing</button>
-    </form>
-    <br><hr> -->
     <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
     <% for (const listing of allListings){ %>
         <a href="/listings/<%=listing._id%>" class="listing-link">
